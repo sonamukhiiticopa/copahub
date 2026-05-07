@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get("postgresql://copahub_db_user:sUfUFnbrwbqF5gmh16aTgjml2ab7heNt@dpg-d7ubuijbc2fs73fammhg-a/copahub_db")
+        default=os.environ.get("postgresql://copahub_db_4abr_user:4TI8co9E1RkrSEaLVzchMcVYeqUuhx1B@dpg-d7uehtegvqtc73fbk7f0-a/copahub_db_4abr")
     )
 }
 
