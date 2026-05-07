@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}All Subjects | COPA Tutorial Hub{% endblock %}
+
+{% block extra_css %}
+<style>
+    .subject-card {
+        border: none;
+        border-radius: 15px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: #fff;
+        overflow: hidden;
+        border: 1px solid #eee;
+    }
+
+    .subject-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .icon-box {
+        width: 80px;
+        height: 80px;
+        background-color: rgba(4, 170, 109, 0.1);
+        color: var(--w3-green);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        font-size: 35px;
+        transition: 0.3s;
+    }
+
+    .subject-card:hover .icon-box {
+        background-color: var(--w3-green);
+        color: white;
+    }
+
+    .badge-topics {
+        background-color: #f8f9fa;
+        color: #666;
+        font-weight: 600;
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-size: 13px;
+    }
+
+    .search-header {
+        background: linear-gradient(rgba(40, 42, 53, 0.9), rgba(40, 42, 53, 0.9)), 
+                    url('https://www.w3schools.com/w3images/pro_typing.jpg');
+        background-size: cover;
+        background-position: center;
+        padding: 80px 0;
+        color: white;
+        margin-bottom: 50px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<section class="search-header text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">Explore All Subjects</h1>
+        <p class="lead mb-4">NIMI Pattern onujayi COPA Trade-er shokol bisoy ekhane pabe.</p>
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form action="{% url 'home' %}" method="GET" class="input-group input-group-lg">
+                    <input type="text" name="q" class="form-control border-0 rounded-start-pill ps-4" placeholder="Search for topics (e.g. JavaScript, DOS)...">
+                    <button class="btn btn-success rounded-end-pill px-4" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Subjects Grid -->
+<div class="container mb-5">
+    <div class="row g-4">
+        {% for subject in subjects %}
+        <div class="col-md-6 col-lg-4">
+            <div class="subject-card h-100 p-4 text-center d-flex flex-column">
+                <div class="icon-box">
+                    <i class="fas {{ subject.icon_class|default:'fa-book' }}"></i>
+                </div>
+                
+                <h3 class="fw-bold mb-2">{{ subject.name }}</h3>
+                
+                <div class="mb-3">
+                    <span class="badge-topics">
+                        <i class="far fa-file-alt me-1"></i> {{ subject.total_topics }} Topics
+                    </span>
+                </div>
+
+                <p class="text-muted flex-grow-1">
+                    {{ subject.description|truncatewords:15 }}
+                </p>
+
+                <div class="mt-4">
+                    {% if subject.topics.first %}
+                        <a href="{{ subject.get_absolute_url }}" class="btn btn-outline-dark rounded-pill px-4 fw-bold w-100 py-2">
+                            Start Learning <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    {% else %}
+                        <button class="btn btn-light rounded-pill px-4 fw-bold w-100 py-2 border disabled">
+                            Coming Soon
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+            <h3 class="text-muted">No subjects available at the moment.</h3>
+            <a href="{% url 'home' %}" class="btn btn-success mt-3">Back to Home</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

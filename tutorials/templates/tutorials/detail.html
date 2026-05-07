@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ topic.title }} | {{ subject.name }} - COPA HUB{% endblock %}
+
+{% block extra_css %}
+<style>
+    .tutorial-header {
+        border-bottom: 2px solid var(--w3-light);
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
+    .tutorial-content {
+        line-height: 1.8;
+        font-size: 1.1rem;
+        color: #333;
+    }
+    .tutorial-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 20px 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    /* Meta bar styling */
+    .meta-bar {
+        font-size: 0.9rem;
+        color: #6c757d;
+        display: flex;
+        gap: 20px;
+        margin-bottom: 15px;
+    }
+    .difficulty-badge {
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+    }
+    .Beginner { background: #e8f5e9; color: #2e7d32; }
+    .Intermediate { background: #fff3e0; color: #ef6c00; }
+    .Advanced { background: #ffebee; color: #c62828; }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+        margin-top: 50px;
+        padding-top: 30px;
+        border-top: 1px solid #eee;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+        background-color: #fcfcfc;
+        border-radius: 10px;
+        padding: 30px;
+        margin-top: 60px;
+        border-left: 5px solid var(--w3-green);
+    }
+</style>
+{% endblock %}
+
+{% block sidebar %}
+<!-- Sidebar Topics List -->
+<div class="list-group list-group-flush">
+    {% for s_topic in topics %}
+    <a href="{{ s_topic.get_absolute_url }}" 
+       class="sidebar-link {% if s_topic.slug == topic.slug %}sidebar-active{% endif %}">
+       <i class="fas {% if s_topic.slug == topic.slug %}fa-play-circle{% else %}fa-circle{% endif %} me-2"></i>
+       {{ s_topic.title }}
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block mobile_sidebar %}
+<!-- Offcanvas menu for mobile -->
+<div class="list-group list-group-flush">
+    {% for s_topic in topics %}
+    <a href="{{ s_topic.get_absolute_url }}" class="list-group-item list-group-item-action {% if s_topic.slug == topic.slug %}active{% endif %}">
+        {{ s_topic.title }}
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block content %}
+<article class="tutorial-wrapper">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'subject_list' %}">Subjects</a></li>
+            <li class="breadcrumb-item active">{{ subject.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="tutorial-header">
+        <h1 class="display-5 fw-bold text-dark mb-3">{{ topic.title }}</h1>
+        
+        <div class="meta-bar">
+            <span><i class="fas fa-signal me-1"></i> Level: <span class="difficulty-badge {{ topic.difficulty }}">{{ topic.difficulty }}</span></span>
+            <span><i class="far fa-clock me-1"></i> {{ topic.get_reading_time }} min read</span>
+            <span><i class="far fa-eye me-1"></i> {{ topic.views_count }} Views</span>
+        </div>
+    </div>
+
+    <!-- Main Rich Text Content -->
+    <div class="tutorial-content">
+        {{ topic.content|safe }}
+    </div>
+
+    <!-- FAQ Section (Jodi thake) -->
+    {% if topic.faqs.all %}
+    <div class="faq-section">
+        <h4 class="fw-bold mb-4"><i class="fas fa-question-circle text-success me-2"></i> Frequently Asked Questions</h4>
+        <div class="accordion accordion-flush" id="faqAccordion">
+            {% for faq in topic.faqs.all %}
+            <div class="accordion-item bg-transparent">
+                <h2 class="accordion-header" id="flush-heading{{ forloop.counter }}">
+                    <button class="accordion-button collapsed bg-transparent fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ forloop.counter }}">
+                        {{ faq.question }}
+                    </button>
+                </h2>
+                <div id="flush-collapse{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">{{ faq.answer }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Next & Previous Navigation -->
+    <div class="nav-buttons row">
+        <div class="col-6">
+            {% if prev_topic %}
+            <a href="{{ prev_topic.get_absolute_url }}" class="btn btn-outline-dark rounded-pill px-4">
+                <i class="fas fa-chevron-left me-2"></i> Previous
+                <span class="d-none d-md-block small text-muted mt-1">{{ prev_topic.title|truncatechars:20 }}</span>
+            </a>
+            {% endif %}
+        </div>
+        <div class="col-6 text-end">
+            {% if next_topic %}
+            <a href="{{ next_topic.get_absolute_url }}" class="btn btn-success rounded-pill px-4">
+                Next <i class="fas fa-chevron-right ms-2"></i>
+                <span class="d-none d-md-block small text-light opacity-75 mt-1">{{ next_topic.title|truncatechars:20 }}</span>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</article>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - COPA HUB Tutorial{% endblock %}
+
+{% block sidebar %}
+    <!-- Home page-e sidebar thakbe na, tai eita empty rakha hoyeche -->
+{% endblock %}
+
+{% block content %}
+<!-- W3-Style Hero Section -->
+<section class="hero-w3 text-white text-center py-5" style="background-color: var(--w3-dark); margin-top: -1px; border-bottom: 8px solid var(--w3-green);">
+    <div class="container py-lg-4">
+        <h1 class="display-3 fw-bold mb-4">Learn to Code ITI COPA</h1>
+        <h4 class="mb-5 text-warning fw-bold">India's Largest COPA Tutorial Hub</h4>
+        
+        <!-- Big Search Bar -->
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <!-- Action ekhon home view-te jabe backend handling-er jonno -->
+                <form action="{% url 'home' %}" method="GET" class="position-relative">
+                    <input type="text" name="q" class="form-control form-control-lg rounded-pill px-4" 
+                           placeholder="Search our tutorials, e.g. HTML" style="height: 60px; font-size: 1.2rem; border: none;">
+                    <button type="submit" class="btn btn-w3 rounded-pill position-absolute" 
+                            style="right: 8px; top: 8px; height: 44px; padding: 0 30px; border: none;">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <p class="mt-4 fs-5">Not sure where to start? <a href="#subjects" class="text-white text-decoration-underline">Check our courses below</a></p>
+    </div>
+</section>
+
+<!-- Stats Bar -->
+<div class="bg-light border-bottom">
+    <div class="container py-3">
+        <div class="row text-center fw-bold text-dark opacity-75">
+            <!-- global_subjects bebohar kora hoyeche jate context processor theke data pay -->
+            <div class="col-4 border-end border-2">
+                <i class="fas fa-book-open me-2 text-success"></i>{{ global_subjects.count }} Subjects
+            </div>
+            <div class="col-4 border-end border-2">
+                <i class="fas fa-file-alt me-2 text-primary"></i>NIMI Based
+            </div>
+            <div class="col-4">
+                <i class="fas fa-user-edit me-2 text-danger"></i>MCQ Practice
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Subjects Section -->
+<div class="container mt-5 mb-5" id="subjects">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold display-5 text-dark">Tutorials</h2>
+        <p class="text-muted">Start learning from the basics to advanced topics based on NIMI pattern.</p>
+    </div>
+
+    <div class="row g-4">
+        {% for subject in global_subjects %}
+        <div class="col-md-6 col-lg-4">
+            <!-- W3 Dynamic Colorful Card -->
+            <div class="w3-card text-center p-5 h-100 transition-hover d-flex flex-column justify-content-between shadow-sm">
+                <div>
+                    <div class="mb-4">
+                        <!-- Backend theke subject icon niye asha hobe -->
+                        <i class="fas {{ subject.icon_class|default:'fa-code' }} fa-4x" 
+                           style="color: var(--w3-green);"></i>
+                    </div>
+                    <h3 class="fw-bold mb-3">{{ subject.name }}</h3>
+                    <p class="text-muted mb-4 small">Complete {{ subject.name }} tutorials for ITI Students following NIMI/Bharat Skills pattern.</p>
+                </div>
+                
+                {% if subject.topics.all %}
+                    <!-- First lesson link dynamic kora hoyeche -->
+                    <a href="{% url 'tutorial_detail' subject.slug subject.topics.first.slug %}" 
+                       class="btn btn-dark btn-lg rounded-pill w-100 fw-bold py-2 mt-auto">
+                       Learn {{ subject.name }}
+                    </a>
+                {% else %}
+                    <button class="btn btn-light w-100 rounded-pill disabled py-2 border mt-auto">Launching Soon</button>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+            <h4 class="text-muted">No subjects found in the database.</h4>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    /* Fixed: Sidebar area overlap fix */
+    #sidebar-area { display: none !important; }
+    #main-content-area { width: 100% !important; padding: 0 !important; flex: none !important; }
+
+    /* W3 Specific Multi-color Card Logic */
+    .w3-card {
+        border-radius: 12px;
+        border: none;
+        transition: transform 0.3s cubic-bezier(.25,.8,.25,1);
+    }
+
+    /* Row indexing for dynamic colors */
+    .row > div:nth-child(6n+1) .w3-card { background-color: #D9EEE1; } 
+    .row > div:nth-child(6n+2) .w3-card { background-color: #FFF4A3; } 
+    .row > div:nth-child(6n+3) .w3-card { background-color: #FFC0C7; } 
+    .row > div:nth-child(6n+4) .w3-card { background-color: #E7E9EB; } 
+    .row > div:nth-child(6n+5) .w3-card { background-color: #F3ECEA; } 
+    .row > div:nth-child(6n+6) .w3-card { background-color: #96D4D4; } 
+
+    .transition-hover:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+    }
+
+    .btn-w3 {
+        background-color: var(--w3-green);
+        color: white;
+    }
+    .btn-w3:hover {
+        background-color: #059862;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .display-3 { font-size: 2.2rem; }
+        .w3-card { padding: 30px !important; }
+    }
+</style>
+{% endblock %}

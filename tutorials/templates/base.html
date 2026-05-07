@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ITI COPA Trade Complete Tutorial Hub - Learn Computer Fundamentals and Programming.">
+    <title>{% block title %}COPA Tutorial Hub{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --w3-green: #04AA6D;
+            --w3-dark: #282A35;
+            --w3-light: #f1f1f1;
+            --sidebar-width: 280px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fff;
+            color: #212529;
+        }
+
+        h1, h2, h3, .navbar-brand { font-family: 'Poppins', sans-serif; }
+
+        /* --- 1. Top Navbar Enhancement --- */
+        .navbar-top {
+            background-color: white;
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            z-index: 1050;
+        }
+        .navbar-brand { font-size: 26px; font-weight: 800; color: var(--w3-dark) !important; text-decoration: none; letter-spacing: -1px; }
+        .navbar-brand span { color: var(--w3-green); }
+
+        /* --- 2. Sub-Navbar (Sticky & Glassmorphism) --- */
+        .sub-nav {
+            background-color: var(--w3-dark);
+            overflow-x: auto;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 1040;
+            display: flex;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .sub-nav::-webkit-scrollbar { height: 4px; }
+        .sub-nav::-webkit-scrollbar-thumb { background: var(--w3-green); }
+        
+        .sub-nav a {
+            color: #ddd;
+            padding: 14px 22px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+        .sub-nav a:hover { color: white; background-color: #000; }
+        .sub-nav .active-tutorial { 
+            background-color: rgba(4, 170, 109, 0.1);
+            color: white; 
+            border-bottom: 3px solid var(--w3-green);
+        }
+
+        /* --- 3. Main Layout --- */
+        .main-container {
+            display: flex;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar Styling */
+        #sidebar-area {
+            width: var(--sidebar-width);
+            min-width: var(--sidebar-width);
+            height: calc(100vh - 110px);
+            position: sticky;
+            top: 55px; /* Sub-nav height */
+            background-color: var(--w3-light);
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+            padding: 20px 0;
+        }
+
+        #main-content-area {
+            flex: 1;
+            padding: 40px;
+            min-width: 0; /* Prevents flex items from overflowing */
+        }
+
+        /* --- 4. Mobile Enhancements --- */
+        @media (max-width: 992px) {
+            #sidebar-area { display: none; }
+            #main-content-area { padding: 20px; }
+            .navbar-top { padding: 10px 15px; }
+        }
+
+        /* Sidebar content decoration */
+        .sidebar-link {
+            padding: 8px 25px;
+            display: block;
+            color: #444;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 15px;
+        }
+        .sidebar-link:hover { background-color: #e2e2e2; color: #000; padding-left: 30px; }
+        .sidebar-active { background-color: #fff; color: var(--w3-green) !important; font-weight: 700; border-right: 4px solid var(--w3-green); }
+
+        /* Footer */
+        footer {
+            background-color: var(--w3-dark);
+            color: #aaa;
+            padding: 60px 20px;
+            text-align: center;
+            border-top: 6px solid var(--w3-green);
+        }
+        footer h2 { color: white; margin-bottom: 15px; }
+
+        /* Custom Scrollbar for Sidebar */
+        #sidebar-area::-webkit-scrollbar { width: 6px; }
+        #sidebar-area::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- 1. Top Header -->
+    <header class="navbar-top">
+        <a class="navbar-brand" href="{% url 'home' %}">COPA<span>HUB</span></a>
+        
+        <div class="d-flex align-items-center gap-3">
+            <!-- Mobile Menu Button (Topics) -->
+            <button class="btn btn-dark d-lg-none rounded-pill px-3" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+                <i class="fas fa-list-ul me-2"></i> Topics
+            </button>
+            
+            <!-- Search Bar -->
+            <div class="d-none d-md-block">
+                <form action="{% url 'home' %}" method="GET" class="input-group">
+                    <input type="text" name="q" class="form-control border-end-0 rounded-start-pill ps-3" placeholder="Search tutorials..." style="width: 250px;">
+                    <button class="btn btn-outline-secondary border-start-0 rounded-end-pill pe-3" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. Horizontal Sub-Nav -->
+    <nav class="sub-nav">
+        <a href="{% url 'home' %}" class="{% if not subject %}active-tutorial{% endif %}">HOME</a>
+        {% for s in global_subjects %}
+            {% if s.topics.first %}
+                <a href="{% url 'tutorial_detail' s.slug s.topics.first.slug %}" 
+                   class="{% if subject and s.slug == subject.slug %}active-tutorial{% endif %}">
+                   {{ s.name|upper }}
+                </a>
+            {% else %}
+                <a href="#" class="text-muted" style="cursor: not-allowed; opacity: 0.5;" title="Coming Soon">
+                   {{ s.name|upper }}
+                </a>
+            {% endif %}
+        {% endfor %}
+    </nav>
+
+    <!-- 3. Main Content Wrapper -->
+    <div class="main-container">
+        
+        <!-- Desktop Sidebar -->
+        <aside id="sidebar-area">
+            <div class="px-4 mb-4">
+                <h6 class="text-uppercase fw-bold text-muted small">Course Content</h6>
+            </div>
+            {% block sidebar %}{% endblock %}
+        </aside>
+
+        <!-- Main Content -->
+        <main id="main-content-area">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- 4. Mobile Offcanvas Sidebar -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebar" style="width: 280px;">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title fw-bold">Topics</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <div class="py-3">
+                {% block mobile_sidebar %}
+                    <!-- Tutorial pages will fill this via blocks -->
+                    <p class="text-center text-muted small">Select a subject from the top menu to see topics.</p>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Footer -->
+    <footer>
+        <div class="container">
+            <h2 class="fw-bold">COPA<span>HUB</span></h2>
+            <p class="mb-4">Master Computer Operator & Programming Assistant Trade with NIMI Based Tutorials.</p>
+            <div class="social-links mb-4">
+                <a href="#" class="text-white mx-2 fs-4"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="text-white mx-2 fs-4"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="text-white mx-2 fs-4"><i class="fab fa-telegram"></i></a>
+            </div>
+            <hr class="bg-secondary">
+            <p class="small">© 2026 COPA HUB | Dedicated to ITI Excellence</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto-close offcanvas on link click (Optional)
+        const offcanvasElementList = [].slice.call(document.querySelectorAll('.offcanvas'))
+        const offcanvasList = offcanvasElementList.map(function (offcanvasEl) {
+          return new bootstrap.Offcanvas(offcanvasEl)
+        })
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
